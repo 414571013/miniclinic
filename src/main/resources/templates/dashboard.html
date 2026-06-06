@@ -55,8 +55,7 @@
                           th:class="${'status-' + appt.status}">BOOKED</span>
                 </td>
                 <td>
-                    <!-- 依狀態顯示按鈕：只有在 BOOKED 狀態下才顯示 -->
-                    <div th:if="${appt.status.name() == 'BOOKED'}">
+                    <div th:if="${appt.status == 'BOOKED'}">
                         <button th:onclick="'completeAppt(' + ${appt.apptId} + ')'" 
                                 style="background: #10B981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;">看診完成</button>
                         <button th:onclick="'cancelAppt(' + ${appt.apptId} + ')'" 
@@ -88,12 +87,12 @@
                     alert('掛號已標記為看診完成');
                     window.location.reload();
                 } else {
-                    alert('操作失敗，請確認您是否有權限或稍後再試。');
+                    alert('操作失敗，請稍後再試');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('發生連線錯誤！');
+                alert('發生錯誤');
             });
         }
 
