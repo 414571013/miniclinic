@@ -55,9 +55,13 @@
                           th:class="${'status-' + appt.status}">BOOKED</span>
                 </td>
                 <td>
-                    <button th:if="${appt.status == 'BOOKED'}" 
-                            th:onclick="'cancelAppt(' + ${appt.apptId} + ')'" 
-                            style="background: #EF4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">取消</button>
+                    <!-- 依狀態顯示按鈕：只有在 BOOKED 狀態下才顯示 -->
+                    <div th:if="${appt.status.name() == 'BOOKED'}">
+                        <button th:onclick="'completeAppt(' + ${appt.apptId} + ')'" 
+                                style="background: #10B981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; margin-right: 4px;">看診完成</button>
+                        <button th:onclick="'cancelAppt(' + ${appt.apptId} + ')'" 
+                                style="background: #EF4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">取消</button>
+                    </div>
                 </td>
             </tr>
         </tbody>
@@ -67,6 +71,32 @@
     </p>
 
     <script>
+        function completeAppt(apptId) {
+            if (!confirm('確定要將此掛號標記為「看診完成」嗎？')) {
+                return;
+            }
+
+            fetch('/api/appointments/' + apptId + '/status', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: 'COMPLETED' })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('掛號已標記為看診完成');
+                    window.location.reload();
+                } else {
+                    alert('操作失敗，請確認您是否有權限或稍後再試。');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('發生連線錯誤！');
+            });
+        }
+
         function cancelAppt(apptId) {
             if (!confirm('確定要取消這筆掛號嗎？')) {
                 return;
