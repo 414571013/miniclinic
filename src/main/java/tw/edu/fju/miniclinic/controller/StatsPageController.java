@@ -23,12 +23,12 @@ public class StatsPageController {
     @GetMapping("/stats")
     public String showStatsPage(Model model) {
         // 將總數放入 Model，讓 HTML 可以用 Thymeleaf 變數讀取
-        model.addAttribute("totalDoctors", doctorRepo.count());
-        model.addAttribute("totalPatients", patientRepo.count());
-        model.addAttribute("totalAppointments", appointmentRepo.count());
+        model.addAttribute("doctorCount", doctorRepo.count());
+        model.addAttribute("patientCount", patientRepo.count());
+        model.addAttribute("appointmentCount", appointmentRepo.count());
         
-        // 如果你有在 AppointmentRepository 加上 countByDepartment，就把下面這行解除註解
-        // model.addAttribute("deptStats", appointmentRepo.countByDepartment());
+        // 將科別統計的資料也放入 Model 中
+        model.addAttribute("departmentStats", appointmentRepo.countByDepartment());
 
         return "stats";  // 對應 src/main/resources/templates/stats.html
     }
